@@ -1,18 +1,24 @@
 package edu.volstate.dicegame;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class Scoreboard extends AppCompatActivity {
     // stuff can go here
+    ArrayList<Player> players = new ArrayList<>();
 
     //overriding onCreate and setting layout
     @Override
@@ -20,42 +26,58 @@ public class Scoreboard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scoreboard);
 
-        // programmatic access to layout stuff
-        TextView titleText = findViewById(R.id.textScoreboardTitle);
-        TextView rollCounterText = findViewById(R.id.textRollCounter);
-        TextView thanksText = findViewById(R.id.textThanks);
-        TextView scoreboardText = findViewById(R.id.textScoreBoard);
+        Button returnButton = findViewById(R.id.buttonReturn);
+
 
         // getting data from intent on main activity
         Bundle bundle = getIntent().getExtras();
-        Dice dice = bundle.getParcelable("edu.volstate.dicegame.Dice");
-        String name = bundle.getString("name");
-        SharedPreferences sharedPreferences = getSharedPreferences("stats", MODE_PRIVATE);
-        // Log.d("name", name.toString());
+        Dice dice = bundle.getParcelable("dice_object");
+        players = bundle.getParcelableArrayList("players");
+        Player player = players.get(players.size() - 1);
+
+//        SharedPreferences sharedPreferences = getSharedPreferences("stats", MODE_PRIVATE);
+//        // Log.d("name", name.toString());
+
+        for (int i = 0; i < players.size(); i++) {
+            Log.d("score board players list", players.get(i).getName());
+        }
+
+
+        RecyclerView recyclerView = findViewById(R.id.scoreboardRecycler);
+        // instantiating adapter
+        SbRecyclerViewAdapter adapter = new SbRecyclerViewAdapter(this, players);
+        // attaching view and adapter
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // programmatic access to layout stuff
+        TextView rollCounterText = findViewById(R.id.textGlobalRolls);
+        TextView thanksText = findViewById(R.id.textThanks);
 
         // setting roll counter text
-        int rollCount = sharedPreferences.getInt("counter", 0);
-        String rollText = String.format("%x Total Rolls", rollCount);
-        rollCounterText.setText(rollText);
+        rollCounterText.setText(String.format("Total Dice Rolls: %s", dice.getRollCounter()));
 
         // setting thanks text
-        String thanks = String.format("Thanks for playing, %s!", name);
+        String thanks = String.format("Thanks for playing, %s!", player.getName());
         thanksText.setText(thanks);
 
-        // setting scoreboard text
-        String scoreboard = "";
-        // getting our information out of shared preferences
-        Map<String, ?> allEntries = sharedPreferences.getAll();
-        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
-            if (entry.getKey().equals("name") || entry.getKey().equals("counter")) {
-                continue;
-            }
-            scoreboard += entry.getKey() + ": " + entry.getValue().toString() + "\n";
-            Log.d("map", entry.getKey().getClass().getName() + " " + entry.getKey() +
-                    " " + entry.getValue().getClass().getName() + " " +
-                    entry.getValue().toString());
-        }
-        scoreboardText.setText(scoreboard);
+        returnButton.setOnClickListener(view -> finish());
+
+
+//        // setting scoreboard text
+//        String scoreboard = "";
+//        // getting our information out of shared preferences
+//        Map<String, ?> allEntries = sharedPreferences.getAll();
+//        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+//            if (entry.getKey().equals("name") || entry.getKey().equals("counter")) {
+//                continue;
+//            }
+//            scoreboard += entry.getKey() + ": " + entry.getValue().toString() + "\n";
+//            Log.d("map", entry.getKey().getClass().getName() + " " + entry.getKey() +
+//                    " " + entry.getValue().getClass().getName() + " " +
+//                    entry.getValue().toString());
+//        }
+//        scoreboardText.setText(scoreboard);
     }
     // more code maybe
 }

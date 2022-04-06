@@ -19,4 +19,5 @@
     <string name="james_phillips_app_version_1_0">James Phillips App version 1.0</string>
     <string name="close">Close</string>
     <string name="scoreboard">Scoreboard</string>
+    <string name="return_to_game">Return to Game</string>
 </resources>

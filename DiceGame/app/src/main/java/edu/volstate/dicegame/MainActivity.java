@@ -29,15 +29,18 @@ public class MainActivity extends AppCompatActivity {
     private Menu menu;
     private final ArrayList<ImageView> diceImages = new ArrayList<>();
     private Dice dice = new Dice();
+    ArrayList<Player> players = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Player player = new Player("");
+
         // shared preferences
-        SharedPreferences sharedPreferences = getSharedPreferences("stats", MODE_PRIVATE);
-        SharedPreferences.Editor myEditor = sharedPreferences.edit();
+        //SharedPreferences sharedPreferences = getSharedPreferences("stats", MODE_PRIVATE);
+        //SharedPreferences.Editor myEditor = sharedPreferences.edit();
 
         // these were all moved at the request of the IDE
         Button rollButton;
@@ -72,23 +75,25 @@ public class MainActivity extends AppCompatActivity {
 
         // on click listener for button press; updated to try out lambda
         rollButton.setOnClickListener(view -> {
+
             bonusText.setText("");
             dice.rollDice();
             dice.setTotal();
+            player.incrementRolls();
 
             // getting and saving the name when roll dice is clicked
-            String name = nameText.getText().toString();
-            myEditor.putString("name", name);
-            Log.d("name",  name);
+            // String name = nameText.getText().toString();
+            //myEditor.putString("name", name);
+            // Log.d("name",  name);
 
             // updating roll counter in shared preferences
-            myEditor.putInt("counter", dice.getRollCounter());
+           // myEditor.putInt("counter", dice.getRollCounter());
 
             // updating roll score for user in shared preferences
-            myEditor.putInt(name, dice.getRollScore());
+            //myEditor.putInt(name, dice.getRollScore());
 
             // applying changes to shared preferences
-            myEditor.apply();
+            //myEditor.apply();
 
             // set these to bool in dice class with onClick listener in menu class
             // if else for double and triple to cal function for adding bonus to total
@@ -96,10 +101,12 @@ public class MainActivity extends AppCompatActivity {
             if (dice.isTripleStatus() && dice.tripleTest()) {
                 dice.totalPlusTriple();
                 bonusText.setText(R.string.tripleText);
+                player.incrementTriples();
             }
             else if (dice.isDoubleStatus() && dice.doubleTest()) {
                 dice.totalPlusDouble();
                 bonusText.setText(R.string.doubleString);
+                player.incrementDoubles();
             }
             else { bonusText.setText(R.string.noBonus); }
             updateUI();
@@ -108,9 +115,16 @@ public class MainActivity extends AppCompatActivity {
 
         // onclick listener creates new intent and passes data to scoreboard class and layout
         scoreboardButton.setOnClickListener(view -> {
+
+            player.setName(nameText.getText().toString());
+            player.setHighScore(dice.getTotal());
+            players.add(player);
             Intent intent = new Intent(getBaseContext(), Scoreboard.class);
             intent.putExtra("dice_object", dice);
-            intent.putExtra("name", nameText.getText().toString());
+            intent.putParcelableArrayListExtra("players", players);
+            dice.resetDice();
+            resultsText.setText("0");
+            totalText.setText("0");
             startActivity(intent);
         });
     }
@@ -135,9 +149,6 @@ public class MainActivity extends AppCompatActivity {
         return dice;
     }
 
-    public void getDice(Dice dice) {
-        this.dice = dice;
-    }
 
     // methods to save our parcel and restore our parcel
     @Override
@@ -149,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         this.dice = savedInstanceState.getParcelable("parcelable");
-        // moved this here instead of onResume()
         updateUI();
     }
 

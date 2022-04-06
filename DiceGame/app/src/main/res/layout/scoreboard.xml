@@ -3,49 +3,63 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/casino_green"
+    android:statusBarColor="@color/dark_green" >
 
-    <TextView
-        android:id="@+id/textScoreboardTitle"
+    <Button
+        android:id="@+id/buttonReturn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Scoreboard Placeholder"
+        android:backgroundTint="@color/white"
+        android:text="@string/return_to_game"
+        android:textColor="@color/casino_green"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.07999998" />
+        app:layout_constraintTop_toBottomOf="@id/textThanks"
+        app:layout_constraintVertical_bias="0.73" />
 
     <TextView
-        android:id="@+id/textRollCounter"
+        android:id="@+id/textGlobalRolls"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Roll count placeholder"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="textGlobalRolls"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.19999999" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textThanks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Thanks Placeholder"
+        android:text="textThanks"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonReturn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.65" />
+        android:backgroundTint="@color/casino_green" >
 
-    <TextView
-        android:id="@+id/textScoreBoard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Scoreboard Scores"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/scoreboardRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.cardview.widget.CardView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

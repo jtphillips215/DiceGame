@@ -140,12 +140,12 @@ public class Dice implements Parcelable {
     public void resetDice() {
         this.rollScore = 0;
         this.total = 0;
-        this.rollCounter = 0;
     }
 
     // parcel methods saving total and dice array
     protected Dice(Parcel in) {
         total = in.readInt();
+        rollCounter = in.readInt();
         rollScore = in.readInt();
         diceList = in.createStringArrayList();
     }
