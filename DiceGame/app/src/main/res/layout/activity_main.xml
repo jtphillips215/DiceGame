@@ -5,20 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/casino_green"
-    android:statusBarColor="@color/info_bar" >
+    android:statusBarColor="@color/dark_green" >
 
     <TextView
         android:id="@+id/textResultLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/result_of_the_dice_roll"
+        android:text="@string/score_this_roll"
         android:textColor="@color/white"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/textRollResult"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.13999999" />
+        app:layout_constraintVertical_bias="0.60" />
 
     <TextView
         android:id="@+id/textRollResult"
@@ -29,9 +29,9 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textResultLabel"
-        app:layout_constraintVertical_bias="0.01999998" />
+        app:layout_constraintStart_toEndOf="@id/textResultLabel"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.60" />
 
     <TextView
         android:id="@+id/textTotalScoreLabel"
@@ -41,10 +41,10 @@
         android:textColor="@color/white"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/textTotalScoreOutput"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textRollResult"
-        app:layout_constraintVertical_bias="0.3" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.90" />
 
     <TextView
         android:id="@+id/textTotalScoreOutput"
@@ -55,9 +55,9 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textTotalScoreLabel"
-        app:layout_constraintVertical_bias="0.04000002" />
+        app:layout_constraintStart_toEndOf="@id/textTotalScoreLabel"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.90" />
 
     <Button
         android:id="@+id/buttonRollDice"
@@ -65,12 +65,90 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/white"
         android:text="@string/roll_dice"
-        android:textColor="@color/toolbar_green"
+        android:textColor="@color/casino_green"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textTotalScoreOutput"
-        app:layout_constraintVertical_bias="0.39" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.75" />
+
+    <CheckBox
+        android:id="@+id/checkBoxDouble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/enable_double"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/checkBoxTriple"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.40"
+        android:textColor="@color/white"
+        android:textSize="24sp" />
+
+    <CheckBox
+        android:id="@+id/checkBoxTriple"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/enable_triple"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/checkBoxDouble"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.40"
+        android:textColor="@color/white"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/textBonusOutput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.50"
+        android:textColor="@color/white"
+        android:textSize="24sp" />
+
+    <ImageView
+        android:id="@+id/imageDiceLeft"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        tools:srcCompat="@tools:sample/avatars"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias=".15"
+        app:layout_constraintEnd_toStartOf="@id/imageDiceMiddle"
+        android:contentDescription="@string/leftdiceimage"
+        android:maxHeight="1dp"
+        android:maxWidth="1dp" />
+
+    <ImageView
+        android:id="@+id/imageDiceMiddle"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        tools:srcCompat="@tools:sample/avatars"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias=".15"
+        app:layout_constraintStart_toEndOf="@id/imageDiceLeft"
+        app:layout_constraintEnd_toStartOf="@id/imageDiceRight"
+        android:contentDescription="@string/middlediceimage" />
+
+    <ImageView
+        android:id="@+id/imageDiceRight"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        tools:srcCompat="@tools:sample/avatars"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias=".15"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/imageDiceMiddle"
+        android:contentDescription="@string/rightdiceimage" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

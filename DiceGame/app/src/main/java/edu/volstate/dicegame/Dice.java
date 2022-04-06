@@ -2,6 +2,7 @@ package edu.volstate.dicegame;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.Random;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ public class Dice implements Parcelable {
     // attributes
     private int total;
     private ArrayList<String> diceList = new ArrayList<>();
+    private int rollScore;
 
     // constructor for dice class making initial roll array 0
     public Dice() {
@@ -22,6 +24,7 @@ public class Dice implements Parcelable {
     // parcel methods saving total and dice array
     protected Dice(Parcel in) {
         total = in.readInt();
+        rollScore = in.readInt();
         diceList = in.createStringArrayList();
     }
 
@@ -45,9 +48,16 @@ public class Dice implements Parcelable {
     // method for setting total
     public void setTotal() {
         for (int i = 0; i < diceList.size(); i++) {
-            int roll = Integer.parseInt(diceList.get(i));
-            this.total += roll;
+            this.total += Integer.parseInt(diceList.get(i));
         }
+    }
+
+    public int getRollScore() {
+        this.rollScore = 0;
+        for (int i = 0; i < diceList.size(); i++) {
+            this.rollScore += Integer.parseInt(diceList.get(i));
+        }
+        return this.rollScore;
     }
 
     // method for accessing dice list
@@ -62,6 +72,34 @@ public class Dice implements Parcelable {
             int dice = rand.nextInt(6) + 1;
             this.diceList.set(i, String.valueOf(dice));
         }
+    }
+
+    // method for testing doubles
+    public Boolean doubleTest() {
+        String dice1 = diceList.get(0);
+        String dice2 = diceList.get(1);
+        String dice3 = diceList.get(2);
+        // the ide really preferred this compared to traditional if statement
+        return dice1.equals(dice2) || dice1.equals(dice3) || dice2.equals(dice3);
+    }
+
+    // method for testing triples
+    public Boolean tripleTest() {
+        String dice1 = diceList.get(0);
+        String dice2 = diceList.get(1);
+        String dice3 = diceList.get(2);
+        // I used the same syntax as the double test method here
+        return dice1.equals(dice2) && dice2.equals(dice3);
+    }
+
+    // method for adding double bonus
+    public void totalPlusDouble() {
+        this.total += 50;
+    }
+
+    // method for adding triple bonus
+    public void totalPlusTriple() {
+        this.total += 100;
     }
 
     // parcel methods for describe contents and writing to parcel

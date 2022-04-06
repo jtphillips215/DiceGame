@@ -9,6 +9,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="casino_green">#4E6A54</color>
     <color name="toolbar_green">#496701</color>
-    <color name="info_bar">#6a9600</color>
-    <color name="pale_green">#98fb98</color>
+    <color name="info_bar_green">#6a9600</color>
+    <color name="lemon_yellow">#F7F052</color>
+    <color name="dark_green">#374a3f</color>
+    <color name="charcoal">#373d4a</color>
 </resources>

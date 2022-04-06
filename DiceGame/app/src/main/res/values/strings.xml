@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">Dice Game</string>
-    <string name="result_of_the_dice_roll">Result of the Dice Roll</string>
-    <string name="total_score">Total Score</string>
+    <string name="score_this_roll">Score This Roll:</string>
+    <string name="total_score">Total Score:</string>
     <string name="roll_dice">Roll Dice</string>
+    <string name="enable_triple">Enable Triple</string>
+    <string name="enable_double">Enable Double</string>
+    <string name="leftdiceimage">leftDiceImage</string>
+    <string name="rightdiceimage">rightDiceImage</string>
+    <string name="middlediceimage">middleDiceImage</string>
+    <string name="doubleString">Double: +50</string>
+    <string name="tripleText">Triple + 100</string>
+    <string name="noBonus">No Score Enhancer</string>
 </resources>
