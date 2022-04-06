@@ -1,9 +1,13 @@
 package edu.volstate.dicegame;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.os.Parcel;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -14,11 +18,13 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    // add reset button and results counter
     // controls and dice object
     private TextView resultsText;
     private TextView totalText;
     private TextView bonusText;
-    private ArrayList<ImageView> diceImages = new ArrayList();
+    private Menu menu;
+    private final ArrayList<ImageView> diceImages = new ArrayList<>();
     private Dice dice = new Dice();
 
     @Override
@@ -28,8 +34,6 @@ public class MainActivity extends AppCompatActivity {
 
         // these were all moved at the request of the IDE
         Button rollButton;
-        CheckBox checkBoxDouble;
-        CheckBox checkBoxTriple;
         ImageView leftDice;
         ImageView middleDice;
         ImageView rightDice;
@@ -47,12 +51,8 @@ public class MainActivity extends AppCompatActivity {
         diceImages.add(middleDice);
         diceImages.add(rightDice);
 
-        //assigning controls users can interact with
+        // assigning controls users can interact with
         rollButton = findViewById(R.id.buttonRollDice);
-        checkBoxDouble = findViewById(R.id.checkBoxDouble);
-        checkBoxTriple = findViewById(R.id.checkBoxTriple);
-        checkBoxDouble.setChecked(true);
-        checkBoxTriple.setChecked(true);
 
         // setting initial dice images and scores
         updateUI();
@@ -64,13 +64,14 @@ public class MainActivity extends AppCompatActivity {
             bonusText.setText("");
             dice.rollDice();
             dice.setTotal();
+            // set these to bool in dice class with onClick listener in menu class
             // if else for double and triple to cal function for adding bonus to total
-            // and update label for bonus. Only fires if checkbox is checked
-            if (checkBoxTriple.isChecked() && dice.tripleTest()) {
+            // and update label for bonus. Only fires if checkbox is checked in settings
+            if (dice.isTripleStatus() && dice.tripleTest()) {
                 dice.totalPlusTriple();
                 bonusText.setText(R.string.tripleText);
             }
-            else if (checkBoxDouble.isChecked() && dice.doubleTest()) {
+            else if (dice.isDoubleStatus() && dice.doubleTest()) {
                 dice.totalPlusDouble();
                 bonusText.setText(R.string.doubleString);
             }
@@ -80,9 +81,33 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // new method for updating UI across all areas this is needed
+    void updateUI() {
+        resultsText.setText(String.valueOf(dice.getRollScore()));
+        totalText.setText(String.valueOf(dice.getTotal()));
+    }
+
+    // moved switch statement to switch class
+    // using switch class to return the die image to main here to separate logic from view
+    void updateImages() {
+        ArrayList<String> diceList = dice.getDiceList();
+        for (int i = 0; i < diceImages.size(); i++) {
+            diceImages.get(i).setImageResource(ImageSwitch.changeImage(diceList.get(i)));
+        }
+    }
+
+    // sendDice sends dice object to menu view
+    Dice sendDice() {
+        return dice;
+    }
+
+    public void getDice(Dice dice) {
+        this.dice = dice;
+    }
+
     // methods to save our parcel and restore our parcel
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable("parcelable", dice);
     }
@@ -90,48 +115,34 @@ public class MainActivity extends AppCompatActivity {
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         this.dice = savedInstanceState.getParcelable("parcelable");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // restoring our text fields on resuming the app after screen rotation
+        // moved this here instead of onResume()
         updateUI();
     }
 
-    // new method for updating UI across all areas this is needed
-    void updateUI() {
-        resultsText.setText(String.valueOf(dice.getRollScore()));
-        totalText.setText(String.valueOf(dice.getTotal()));
-        // resetting score to zero on initial startup
-        if (dice.getTotal() == 0) {
-            resultsText.setText("0");
-        }
+    // on create options menu for hamburger menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
     }
 
-    // I used an array list to try and minimize the switch chain here
-    void updateImages() {
-        ArrayList<String> diceList = dice.getDiceList();
-        for (int i = 0; i < diceImages.size(); i++)
-            switch (diceList.get(i)) {
-                case "1":
-                    diceImages.get(i).setImageResource(R.drawable.die_1);
-                    break;
-                case "2":
-                    diceImages.get(i).setImageResource(R.drawable.die_2);
-                    break;
-                case "3":
-                    diceImages.get(i).setImageResource(R.drawable.die_3);
-                    break;
-                case "4":
-                    diceImages.get(i).setImageResource(R.drawable.die_4);
-                    break;
-                case "5":
-                    diceImages.get(i).setImageResource(R.drawable.die_5);
-                    break;
-                case "6":
-                    diceImages.get(i).setImageResource(R.drawable.die_6);
-                    break;
-            }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        int id = item.getItemId();
+
+        if (id == R.id.action_settings) {
+            DialogMenu dialogMenu = new DialogMenu();
+            dialogMenu.show(getSupportFragmentManager(), "");
+            return true;
+        }
+
+        if(id == R.id.action_about) {
+            DialogAbout dialogAbout = new DialogAbout();
+            dialogAbout.show(getSupportFragmentManager(), "");
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

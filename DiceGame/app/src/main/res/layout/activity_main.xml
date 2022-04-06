@@ -73,32 +73,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.75" />
 
-    <CheckBox
-        android:id="@+id/checkBoxDouble"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/enable_double"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/checkBoxTriple"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.40"
-        android:textColor="@color/white"
-        android:textSize="24sp" />
-
-    <CheckBox
-        android:id="@+id/checkBoxTriple"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/enable_triple"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/checkBoxDouble"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.40"
-        android:textColor="@color/white"
-        android:textSize="24sp" />
-
     <TextView
         android:id="@+id/textBonusOutput"
         android:layout_width="wrap_content"
