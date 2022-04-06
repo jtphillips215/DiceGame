@@ -9,7 +9,7 @@
         android:id="@+id/aboutInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/james_phillips_app_version_1_0"
+        android:text="@string/about_text"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

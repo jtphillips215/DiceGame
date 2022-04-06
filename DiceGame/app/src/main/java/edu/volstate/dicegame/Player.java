@@ -22,18 +22,6 @@ public class Player implements Parcelable {
         rollCount = in.readInt();
     }
 
-    public static final Creator<Player> CREATOR = new Creator<Player>() {
-        @Override
-        public Player createFromParcel(Parcel in) {
-            return new Player(in);
-        }
-
-        @Override
-        public Player[] newArray(int size) {
-            return new Player[size];
-        }
-    };
-
     // getters and setters
     public String getName() {
         return name;
@@ -77,11 +65,13 @@ public class Player implements Parcelable {
     public void setRollCount(int rollCount) {
         this.rollCount = rollCount;
     }
+
     // method for incrementing roll count
     public void incrementRolls() {
         this.rollCount++;
     }
 
+    // parcelable
     @Override
     public int describeContents() {
         return 0;
@@ -95,4 +85,16 @@ public class Player implements Parcelable {
         parcel.writeInt(highScore);
         parcel.writeInt(rollCount);
     }
+
+    public static final Creator<Player> CREATOR = new Creator<Player>() {
+        @Override
+        public Player createFromParcel(Parcel in) {
+            return new Player(in);
+        }
+
+        @Override
+        public Player[] newArray(int size) {
+            return new Player[size];
+        }
+    };
 }

@@ -2,24 +2,40 @@ package edu.volstate.dicegame;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GestureDetectorCompat;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener,
+        GestureDetector.OnDoubleTapListener {
+
+    // gestures
+    private GestureDetectorCompat gestureDetector;
+    private static final int MIN_SWIPE_DISTANCE_X = 100;
+    private static final int MIN_SWIPE_DISTANCE_Y = 100;
+    private static final int MAX_SWIPE_DISTANCE_X = 1000;
+    private static final int MAX_SWIPE_DISTANCE_y = 1000;
+
 
     // add reset button and results counter
     // controls and dice object
@@ -30,13 +46,22 @@ public class MainActivity extends AppCompatActivity {
     private final ArrayList<ImageView> diceImages = new ArrayList<>();
     private Dice dice = new Dice();
     ArrayList<Player> players = new ArrayList<>();
+    Player player;
+    // media player declaration
+    MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Player player = new Player("");
+        player = new Player("");
+
+        mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.dicethrow);
+
+        // gestures
+        this.gestureDetector = new GestureDetectorCompat(this, this);
+        gestureDetector.setOnDoubleTapListener(this);
 
         // shared preferences
         //SharedPreferences sharedPreferences = getSharedPreferences("stats", MODE_PRIVATE);
@@ -69,13 +94,19 @@ public class MainActivity extends AppCompatActivity {
         nameText = findViewById(R.id.editTextName);
 
         // setting initial dice images and scores
-        updateUI();
+        startupUI();
         dice.rollDice();
         updateImages();
 
         // on click listener for button press; updated to try out lambda
         rollButton.setOnClickListener(view -> {
 
+            // toast for new gesture controls
+            Toast.makeText(MainActivity.this,
+                    "Try our new feature. Swipe or double tap to roll!",
+                    Toast.LENGTH_LONG).show();
+            // media player start call
+            mediaPlayer.start();
             bonusText.setText("");
             dice.rollDice();
             dice.setTotal();
@@ -111,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
             else { bonusText.setText(R.string.noBonus); }
             updateUI();
             updateImages();
+            Log.d("dice roll counter", String.valueOf(dice.getRollCounter()));
         });
 
         // onclick listener creates new intent and passes data to scoreboard class and layout
@@ -120,13 +152,18 @@ public class MainActivity extends AppCompatActivity {
             player.setHighScore(dice.getTotal());
             players.add(player);
             Intent intent = new Intent(getBaseContext(), Scoreboard.class);
-            intent.putExtra("dice_object", dice);
+            intent.putExtra("roll_count", dice.getRollCounter());
             intent.putParcelableArrayListExtra("players", players);
             dice.resetDice();
-            resultsText.setText("0");
-            totalText.setText("0");
+            startupUI();
             startActivity(intent);
         });
+    }
+
+    void startupUI() {
+        resultsText.setText("0");
+        totalText.setText("0");
+        bonusText.setText("");
     }
 
     // new method for updating UI across all areas this is needed
@@ -139,7 +176,9 @@ public class MainActivity extends AppCompatActivity {
     // using switch class to return the die image to main here to separate logic from view
     void updateImages() {
         ArrayList<String> diceList = dice.getDiceList();
+        Animation bounce = AnimationUtils.loadAnimation(this, R.anim.bounce);
         for (int i = 0; i < diceImages.size(); i++) {
+            diceImages.get(i).startAnimation(bounce);
             diceImages.get(i).setImageResource(ImageSwitch.changeImage(diceList.get(i)));
         }
     }
@@ -148,7 +187,6 @@ public class MainActivity extends AppCompatActivity {
     Dice sendDice() {
         return dice;
     }
-
 
     // methods to save our parcel and restore our parcel
     @Override
@@ -188,5 +226,100 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        player = new Player("");
+
+    }
+
+    // on gesture overrides, using doubletap and fling to roll
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent motionEvent) {
+        mediaPlayer.start();
+        dice.rollDice();
+        dice.setTotal();
+        player.incrementRolls();
+        if (dice.isTripleStatus() && dice.tripleTest()) {
+            dice.totalPlusTriple();
+            bonusText.setText(R.string.tripleText);
+            player.incrementTriples();
+        }
+        else if (dice.isDoubleStatus() && dice.doubleTest()) {
+            dice.totalPlusDouble();
+            bonusText.setText(R.string.doubleString);
+            player.incrementDoubles();
+        }
+        else { bonusText.setText(R.string.noBonus); }
+        updateUI();
+        updateImages();
+        Log.d("dice roll counter", String.valueOf(dice.getRollCounter()));
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onDown(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        mediaPlayer.start();
+        dice.rollDice();
+        dice.setTotal();
+        player.incrementRolls();
+        if (dice.isTripleStatus() && dice.tripleTest()) {
+            dice.totalPlusTriple();
+            bonusText.setText(R.string.tripleText);
+            player.incrementTriples();
+        }
+        else if (dice.isDoubleStatus() && dice.doubleTest()) {
+            dice.totalPlusDouble();
+            bonusText.setText(R.string.doubleString);
+            player.incrementDoubles();
+        }
+        else { bonusText.setText(R.string.noBonus); }
+        updateUI();
+        updateImages();
+        Log.d("dice roll counter", String.valueOf(dice.getRollCounter()));
+        return false;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent motionEvent) {
+        this.gestureDetector.onTouchEvent(motionEvent);
+        return super.onTouchEvent(motionEvent);
     }
 }

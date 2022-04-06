@@ -77,18 +77,8 @@ public class Dice implements Parcelable {
         else if (this.isDoubleStatus() && this.doubleTest()) {
             this.rollScore += 50;
         }
-        if (rollCounter == 0) {
-            // moved increment roll counter from roll dice due to counting bug caused by setting
-            // dice on game load
-            rollCounter++;
-            return 0;
-        }
-        else {
-            // moved increment roll counter from roll dice due to counting bug caused by setting
-            // dice on game load
-            rollCounter++;
-            return this.rollScore;
-        }
+        rollCounter++;
+        return rollScore;
     }
 
     // method for accessing total

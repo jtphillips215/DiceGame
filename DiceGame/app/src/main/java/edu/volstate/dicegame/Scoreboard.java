@@ -31,17 +31,17 @@ public class Scoreboard extends AppCompatActivity {
 
         // getting data from intent on main activity
         Bundle bundle = getIntent().getExtras();
-        Dice dice = bundle.getParcelable("dice_object");
+        int rollCounter = bundle.getInt("roll_count");
+        Log.d("counter scoreboard", String.valueOf(rollCounter));
         players = bundle.getParcelableArrayList("players");
         Player player = players.get(players.size() - 1);
 
-//        SharedPreferences sharedPreferences = getSharedPreferences("stats", MODE_PRIVATE);
-//        // Log.d("name", name.toString());
-
         for (int i = 0; i < players.size(); i++) {
-            Log.d("score board players list", players.get(i).getName());
+            Log.d("scoreboard player name:", players.get(i).getName());
         }
 
+//        SharedPreferences sharedPreferences = getSharedPreferences("stats", MODE_PRIVATE);
+//        // Log.d("name", name.toString());
 
         RecyclerView recyclerView = findViewById(R.id.scoreboardRecycler);
         // instantiating adapter
@@ -55,7 +55,7 @@ public class Scoreboard extends AppCompatActivity {
         TextView thanksText = findViewById(R.id.textThanks);
 
         // setting roll counter text
-        rollCounterText.setText(String.format("Total Dice Rolls: %s", dice.getRollCounter()));
+        rollCounterText.setText(String.format("Total Dice Rolls: %s", rollCounter));
 
         // setting thanks text
         String thanks = String.format("Thanks for playing, %s!", player.getName());
