@@ -17,10 +17,10 @@ public class Dice implements Parcelable {
     private int total;
     private ArrayList<String> diceList = new ArrayList<>();
     private int rollScore;
+    private int rollCounter;
     // added boolean attributes to track status of menu options for double or triple checkboxes
     private boolean doubleStatus;
     private boolean tripleStatus;
-    private int rollCounter;
 
     // constructor for dice class making initial roll array 0
     public Dice() {
@@ -62,7 +62,6 @@ public class Dice implements Parcelable {
             int dice = rand.nextInt(6) + 1;
             this.diceList.set(i, String.valueOf(dice));
         }
-        rollCounter++;
     }
 
     // method for accessing roll score
@@ -79,9 +78,15 @@ public class Dice implements Parcelable {
             this.rollScore += 50;
         }
         if (rollCounter == 0) {
+            // moved increment roll counter from roll dice due to counting bug caused by setting
+            // dice on game load
+            rollCounter++;
             return 0;
         }
         else {
+            // moved increment roll counter from roll dice due to counting bug caused by setting
+            // dice on game load
+            rollCounter++;
             return this.rollScore;
         }
     }
@@ -96,6 +101,11 @@ public class Dice implements Parcelable {
         for (int i = 0; i < diceList.size(); i++) {
             this.total += Integer.parseInt(diceList.get(i));
         }
+    }
+
+    // method for accessing roll counter
+    public int getRollCounter() {
+        return this.rollCounter;
     }
 
     // method for testing doubles
@@ -130,6 +140,7 @@ public class Dice implements Parcelable {
     public void resetDice() {
         this.rollScore = 0;
         this.total = 0;
+        this.rollCounter = 0;
     }
 
     // parcel methods saving total and dice array

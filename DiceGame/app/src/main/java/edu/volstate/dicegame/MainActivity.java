@@ -3,8 +3,11 @@ package edu.volstate.dicegame;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcel;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,11 +35,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // shared preferences
+        SharedPreferences sharedPreferences = getSharedPreferences("stats", MODE_PRIVATE);
+        SharedPreferences.Editor myEditor = sharedPreferences.edit();
+
         // these were all moved at the request of the IDE
         Button rollButton;
+        Button scoreboardButton;
         ImageView leftDice;
         ImageView middleDice;
         ImageView rightDice;
+        TextView nameText;
 
         // assigning controls that need to be updated
         resultsText = findViewById(R.id.textRollResult);
@@ -53,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
 
         // assigning controls users can interact with
         rollButton = findViewById(R.id.buttonRollDice);
+        scoreboardButton = findViewById(R.id.buttonScoreboard);
+        nameText = findViewById(R.id.editTextName);
 
         // setting initial dice images and scores
         updateUI();
@@ -64,6 +75,21 @@ public class MainActivity extends AppCompatActivity {
             bonusText.setText("");
             dice.rollDice();
             dice.setTotal();
+
+            // getting and saving the name when roll dice is clicked
+            String name = nameText.getText().toString();
+            myEditor.putString("name", name);
+            Log.d("name",  name);
+
+            // updating roll counter in shared preferences
+            myEditor.putInt("counter", dice.getRollCounter());
+
+            // updating roll score for user in shared preferences
+            myEditor.putInt(name, dice.getRollScore());
+
+            // applying changes to shared preferences
+            myEditor.apply();
+
             // set these to bool in dice class with onClick listener in menu class
             // if else for double and triple to cal function for adding bonus to total
             // and update label for bonus. Only fires if checkbox is checked in settings
@@ -78,6 +104,14 @@ public class MainActivity extends AppCompatActivity {
             else { bonusText.setText(R.string.noBonus); }
             updateUI();
             updateImages();
+        });
+
+        // onclick listener creates new intent and passes data to scoreboard class and layout
+        scoreboardButton.setOnClickListener(view -> {
+            Intent intent = new Intent(getBaseContext(), Scoreboard.class);
+            intent.putExtra("dice_object", dice);
+            intent.putExtra("name", nameText.getText().toString());
+            startActivity(intent);
         });
     }
 

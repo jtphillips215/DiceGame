@@ -47,7 +47,7 @@ public class DialogMenu extends DialogFragment {
         ButtonReset.setOnClickListener(view -> {
             menuDice.resetDice();
             callingActivity.updateUI();
-            callingActivity.getDice(menuDice);
+            //callingActivity.getDice(menuDice);
             dismiss();
         });
 
@@ -58,7 +58,7 @@ public class DialogMenu extends DialogFragment {
         ButtonSave.setOnClickListener(view -> {
             menuDice.setDoubleStatus(CheckBoxDouble.isChecked());
             menuDice.setTripleStatus(CheckBoxTriple.isChecked());
-            callingActivity.getDice(menuDice);
+            //callingActivity.getDice(menuDice);
             dismiss();
         });
 
